@@ -4,7 +4,7 @@ import {
   decodeAndDecryptObject,
   encryptAndEncodeObject,
   generateKey,
-  isNotLongURL,
+  isNotTooLongURL,
   isSafeForURL,
 } from "../src/symetric-crypto-utils";
 
@@ -104,7 +104,7 @@ test("Encrypt, encode, decode, and verify safe URL characters and URL not long",
   // Assert
   // Check that the encoded data consists only of safe URL characters
   expect(isSafeForURL(encodedData)).toBe(true);
-  expect(isNotLongURL(encodedData)).toBe(true);
+  expect(isNotTooLongURL(encodedData)).toBe(true);
 
   // Simulate receiving from the URL and decoding
   const decodedObject = decodeAndDecryptObject(

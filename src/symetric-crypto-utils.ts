@@ -75,6 +75,12 @@ export function isSafeForURL(data: string): boolean {
   return safeUrlPattern.test(data);
 }
 
-export function isNotLongURL(data: string): boolean {
+/**
+ * i do not want too big url because it might cause issue with browser
+ * 400 - 500 is not conside too long
+ * @param data 
+ * @returns 
+ */
+export function isNotTooLongURL(data: string): boolean {
   return data.length < 400;
 }
