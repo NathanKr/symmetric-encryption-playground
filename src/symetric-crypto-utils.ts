@@ -34,14 +34,6 @@ export function encryptAndEncodeObject(obj: Object, key: Buffer): string {
   );
 
 
-  /***
-    --- this should not happen because of encodeURIComponent 
-    --- but to be on the safe side
-   ***/
-  if (!isSafeForURL(encodedData)) {
-    throw new Error("Decrypted data contains disallowed characters.");
-  }
-
   return encodedData;
 }
 
