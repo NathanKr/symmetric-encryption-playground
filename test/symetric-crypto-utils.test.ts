@@ -4,12 +4,15 @@ import {
   decodeAndDecryptObject,
   encryptAndEncodeObject,
   generateKey,
+  isNotLongURL,
   isSafeForURL,
 } from "../src/symetric-crypto-utils";
 
 interface IMyObject {
   type: string;
-  msfrom1970: number;
+  dtStart: number; // ms from 1970
+  dtEnd: number; // ms from 1970
+  dtCreated: number; // ms from 1970
 }
 
 test("generate a key of the correct length", () => {
@@ -21,7 +24,12 @@ test("generate a key of the correct length", () => {
 test("encryptAndEncodeObject should encrypt and encode the object", () => {
   // Arrange
   const secretKey = generateKey();
-  const myObject: IMyObject = { type: "example", msfrom1970: Date.now() };
+  const myObject: IMyObject = {
+    type: "example",
+    dtStart: Date.now(),
+    dtCreated: Date.now(),
+    dtEnd: Date.now(),
+  };
 
   // Act
   const encodedQueryString = encryptAndEncodeObject(myObject, secretKey);
@@ -41,13 +49,20 @@ test("encryptAndEncodeObject should encrypt and encode the object", () => {
   // Further assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
   expect(decodedObject.type).toBe(myObject.type);
-  expect(decodedObject.msfrom1970).toBe(myObject.msfrom1970);
+  expect(decodedObject.dtCreated).toBe(myObject.dtCreated);
+  expect(decodedObject.dtEnd).toBe(myObject.dtEnd);
+  expect(decodedObject.dtStart).toBe(myObject.dtStart);
 });
 
 test("Encrypt, encode, decode, and decrypt object from URL", () => {
   // Arrange
   const secretKey = generateKey();
-  const originalObject = { type: "example", msfrom1970: Date.now() };
+  const originalObject: IMyObject = {
+    type: "example",
+    dtStart: Date.now(),
+    dtCreated: Date.now(),
+    dtEnd: Date.now(),
+  };
 
   // Act
   const encodedData = encryptAndEncodeObject(originalObject, secretKey);
@@ -68,13 +83,20 @@ test("Encrypt, encode, decode, and decrypt object from URL", () => {
   // You might want to enhance the assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
   expect(decodedObject.type).toBe(originalObject.type);
-  expect(decodedObject.msfrom1970).toBe(originalObject.msfrom1970);
+  expect(decodedObject.dtCreated).toBe(originalObject.dtCreated);
+  expect(decodedObject.dtEnd).toBe(originalObject.dtEnd);
+  expect(decodedObject.dtStart).toBe(originalObject.dtStart);
 });
 
-test("Encrypt, encode, decode, and verify safe URL characters", () => {
+test("Encrypt, encode, decode, and verify safe URL characters and URL not long", () => {
   // Arrange
   const secretKey = generateKey();
-  const originalObject: IMyObject = { type: "example", msfrom1970: Date.now() };
+  const originalObject: IMyObject = {
+    type: "example",
+    dtStart: Date.now(),
+    dtCreated: Date.now(),
+    dtEnd: Date.now(),
+  };
 
   // Act
   const encodedData = encryptAndEncodeObject(originalObject, secretKey);
@@ -82,12 +104,18 @@ test("Encrypt, encode, decode, and verify safe URL characters", () => {
   // Assert
   // Check that the encoded data consists only of safe URL characters
   expect(isSafeForURL(encodedData)).toBe(true);
+  expect(isNotLongURL(encodedData)).toBe(true);
 
   // Simulate receiving from the URL and decoding
-  const decodedObject = decodeAndDecryptObject(encodedData, secretKey) as IMyObject;
+  const decodedObject = decodeAndDecryptObject(
+    encodedData,
+    secretKey
+  ) as IMyObject;
 
   // Further assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
   expect(decodedObject.type).toBe(originalObject.type);
-  expect(decodedObject.msfrom1970).toBe(originalObject.msfrom1970);
+  expect(decodedObject.dtCreated).toBe(originalObject.dtCreated);
+  expect(decodedObject.dtEnd).toBe(originalObject.dtEnd);
+  expect(decodedObject.dtStart).toBe(originalObject.dtStart);
 });

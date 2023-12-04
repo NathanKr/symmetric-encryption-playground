@@ -74,3 +74,7 @@ export function isSafeForURL(data: string): boolean {
   // Test the data against the pattern
   return safeUrlPattern.test(data);
 }
+
+export function isNotLongURL(data: string): boolean {
+  return data.length < 400;
+}
