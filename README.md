@@ -7,3 +7,6 @@ Experiment with symetric encryption i.e. same key used to ebcrypt and decrypt. T
 <li>make sure the result is not to long - according to chatgpt the encrypted string len for Symmetric Encryption is about the same as the original string length</li>
 <li>make sure that encryption does not take too long - the test go very fast 289ms all four tests</li>
 </ul>
+
+<h2>References</h2>
+ChatGpt

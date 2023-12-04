@@ -1,6 +1,5 @@
 // crypto.ts
 import * as crypto from "crypto";
-import IMyObject from "./i-my-object";
 
 export const KEY_LENGTH = 32;
 
@@ -15,7 +14,7 @@ export function generateIV(): Buffer {
 }
 
 // Function to encrypt and encode the object
-export function encryptAndEncodeObject(obj: IMyObject, key: Buffer): string {
+export function encryptAndEncodeObject(obj: Object, key: Buffer): string {
   const serializedData = JSON.stringify(obj);
 
   const iv = generateIV();
@@ -50,7 +49,7 @@ export function encryptAndEncodeObject(obj: IMyObject, key: Buffer): string {
 export function decodeAndDecryptObject(
   encodedData: string,
   key: Buffer
-): IMyObject {
+): Object {
   const decodedData = decodeURIComponent(encodedData);
   const { iv, encryptedData, tag } = JSON.parse(decodedData);
 

@@ -6,7 +6,11 @@ import {
   generateKey,
   isSafeForURL,
 } from "../src/symetric-crypto-utils";
-import IMyObject from "../src/i-my-object";
+
+interface IMyObject {
+  type: string;
+  msfrom1970: number;
+}
 
 test("generate a key of the correct length", () => {
   const key = generateKey();
@@ -29,7 +33,10 @@ test("encryptAndEncodeObject should encrypt and encode the object", () => {
   expect(encodedQueryString.length).toBeGreaterThan(0);
 
   // Simulate receiving from the URL and decoding
-  const decodedObject = decodeAndDecryptObject(encodedQueryString, secretKey);
+  const decodedObject = decodeAndDecryptObject(
+    encodedQueryString,
+    secretKey
+  ) as IMyObject;
 
   // Further assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
@@ -52,7 +59,10 @@ test("Encrypt, encode, decode, and decrypt object from URL", () => {
 
   // Simulate receiving from the URL and decoding
   const receivedEncodedData = decodeURIComponent(simulatedURL.split("=")[1]);
-  const decodedObject = decodeAndDecryptObject(receivedEncodedData, secretKey);
+  const decodedObject = decodeAndDecryptObject(
+    receivedEncodedData,
+    secretKey
+  ) as IMyObject;
 
   // Assert
   // You might want to enhance the assertions based on your specific needs
@@ -64,7 +74,7 @@ test("Encrypt, encode, decode, and decrypt object from URL", () => {
 test("Encrypt, encode, decode, and verify safe URL characters", () => {
   // Arrange
   const secretKey = generateKey();
-  const originalObject = { type: "example", msfrom1970: Date.now() };
+  const originalObject: IMyObject = { type: "example", msfrom1970: Date.now() };
 
   // Act
   const encodedData = encryptAndEncodeObject(originalObject, secretKey);
@@ -74,7 +84,7 @@ test("Encrypt, encode, decode, and verify safe URL characters", () => {
   expect(isSafeForURL(encodedData)).toBe(true);
 
   // Simulate receiving from the URL and decoding
-  const decodedObject = decodeAndDecryptObject(encodedData, secretKey);
+  const decodedObject = decodeAndDecryptObject(encodedData, secretKey) as IMyObject;
 
   // Further assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
