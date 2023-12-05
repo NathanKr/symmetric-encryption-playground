@@ -1,11 +1,13 @@
 import { test, expect } from "vitest";
 import {
   KEY_LENGTH,
+  bufferToString,
   decodeAndDecryptObject,
   encryptAndEncodeObject,
   generateKey,
   isNotTooLongURL,
   isSafeForURL,
+  stringToBuffer,
 } from "../src/symetric-crypto-utils";
 
 interface IMyObject {
@@ -15,8 +17,24 @@ interface IMyObject {
   dtCreated: number; // ms from 1970
 }
 
+test('converts a key from buffer to string and back', () => {
+  // Generate a key
+  const originalKey = generateKey();
+
+  // Convert the key to a string
+  const keyString = bufferToString(originalKey);
+
+  // Convert the string back to a buffer
+  const convertedKey = stringToBuffer(keyString);
+
+  // Expect the converted key to be the same as the original key
+  expect(convertedKey.equals(originalKey)).toBe(true);
+});
+
 test("generate a key of the correct length", () => {
   const key = generateKey();
+  console.log(key);
+  
   // Adjust the length based on your key size (256 bits for AES-256)
   expect(key.length).toBe(KEY_LENGTH);
 });

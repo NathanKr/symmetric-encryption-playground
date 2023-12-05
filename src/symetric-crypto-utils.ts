@@ -3,6 +3,15 @@ import * as crypto from "crypto";
 
 export const KEY_LENGTH = 32;
 
+export function bufferToString(keyBuffer) {
+  return keyBuffer.toString('hex');
+}
+
+export function stringToBuffer(keyString) {
+  return Buffer.from(keyString, 'hex');
+}
+
+
 // Function to generate a random encryption key
 export function generateKey(): Buffer {
   return crypto.randomBytes(KEY_LENGTH);
