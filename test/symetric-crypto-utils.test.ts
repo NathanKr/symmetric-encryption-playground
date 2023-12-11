@@ -17,12 +17,14 @@ interface IMyObject {
   dtCreated: number; // ms from 1970
 }
 
-test('converts a key from buffer to string and back', () => {
+test("converts a key from buffer to string and back", () => {
   // Generate a key
   const originalKey = generateKey();
 
   // Convert the key to a string
   const keyString = bufferToString(originalKey);
+
+  console.log(keyString);
 
   // Convert the string back to a buffer
   const convertedKey = stringToBuffer(keyString);
@@ -34,7 +36,7 @@ test('converts a key from buffer to string and back', () => {
 test("generate a key of the correct length", () => {
   const key = generateKey();
   console.log(key);
-  
+
   // Adjust the length based on your key size (256 bits for AES-256)
   expect(key.length).toBe(KEY_LENGTH);
 });
@@ -116,19 +118,25 @@ test("Encrypt, encode, decode, and verify safe URL characters and URL not long",
     dtEnd: Date.now(),
   };
 
+  const start = new Date();
   // Act
   const encodedData = encryptAndEncodeObject(originalObject, secretKey);
-
-  // Assert
-  // Check that the encoded data consists only of safe URL characters
-  expect(isSafeForURL(encodedData)).toBe(true);
-  expect(isNotTooLongURL(encodedData)).toBe(true);
 
   // Simulate receiving from the URL and decoding
   const decodedObject = decodeAndDecryptObject(
     encodedData,
     secretKey
   ) as IMyObject;
+
+  const end = new Date();
+
+  expect(end.getTime()-start.getTime()).toBeLessThan(10);
+
+
+  // Assert
+  // Check that the encoded data consists only of safe URL characters
+  expect(isSafeForURL(encodedData)).toBe(true);
+  expect(isNotTooLongURL(encodedData)).toBe(true);
 
   // Further assertions based on your specific needs
   expect(decodedObject).toBeInstanceOf(Object);
